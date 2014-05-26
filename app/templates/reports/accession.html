@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="container page-header">
+{% if report %}
+<table class="table">
+    <thead>
+    <tr>
+    <th>Timestamp</th>
+    <th>Accession</th>
+    <th>Procedure</th>
+    <th>Trainee</th>
+    <th>Attending</th>
+    <th>Diff score</th>
+    <th>Diff score %</th>
+    </tr>
+    </thead>
+    <tr>
+    <td>{{ report["timestamp"] }}</td>
+    <td>{{ report["accession"] }}</td>
+    <td>{{ report["proceduredescription"] }}</td>
+    <td>{{ report["resident"] }}</td>
+    <td>{{ report["attending"] }}</td>
+    <td>{{ report["diff_score"] }}</td>
+    <td>{{ '%.2f' % report["diff_score_percent"] }}</td>
+    </tr>
+</table>
+
+<ul class="nav nav-tabs">
+  <li><a href="#prelim" data-toggle="tab">Prelim</a></li>
+  <li><a href="#final" data-toggle="tab">Final</a></li>
+  <li class="active">
+    <a href="#diff" data-toggle="tab">Diff</a>
+  </li>
+  
+</ul>
+ <div class="tab-content">
+   <div id="prelim" class="tab-pane">
+    <pre>
+{{ report["prelim"] }}
+     </pre>
+   </div>
+   <div id="final" class="tab-pane">
+     <pre>
+{{ report["final"] }}
+     </pre>
+   </div>
+   <div id="diff" class="tab-pane active">
+     <div class="well">
+     {{ report["diff"] | safe}}
+     </div>
+   </div>
+  </div>
+
+
+
+{% endif %}
+</div>
+{% endblock %}
