@@ -1,6 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Reports{% endblock %}
+{% block title %}ReportDiff{% endblock %}
 
 {% block navbar %}
 <div class="navbar navbar-default" role="navigation">
@@ -12,19 +12,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('reports.index') }}">Reports</a>
+            <a class="navbar-brand" href="{{ url_for('reports.index') }}">ReportDiff</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('reports.index') }}">Home</a></li>
                 {% if current_user.is_authenticated() %}
                 <li><a href="{{ url_for('reports.user', username=current_user.username) }}">Report list</a></li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {% if not current_user.is_authenticated() %}
-                <li><a href="{{ url_for('auth.login') }}">User Login</a></li>
-                {% else %}
+                {% if current_user.is_authenticated() %}
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                 {% endif %}            
             </ul>            

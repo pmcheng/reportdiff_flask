@@ -12,6 +12,7 @@
     <th>Procedure</th>
     <th>Trainee</th>
     <th>Attending</th>
+    <th>Diff %</th>
     </tr>
     </thead>
     {% for row in reports %}
@@ -19,8 +20,10 @@
     <td><a href="{{ url_for('reports.accession',accession=row["accession"]) }}">{{ row["timestamp"] }}</a></td>
     <td><a href="{{ url_for('reports.accession',accession=row["accession"]) }}">{{ row["accession"] }}</a></td>
     <td><a href="{{ url_for('reports.accession',accession=row["accession"]) }}">{{ row["proceduredescription"] }}</a></td>
+    
     <td>{{ row["resident"] }}</td>
     <td>{{ row["attending"] }}</td>
+    <td>{{ '%.1f' % row["diff_score_percent"] }}</td>
     </tr>
     {% endfor %}
 </table>

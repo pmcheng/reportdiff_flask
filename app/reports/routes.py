@@ -35,7 +35,9 @@ def index():
             querystring+=buildquery(userstring)
         
         numreports=query_db("select count(*) as count from study where "+querystring,one=True)
-        return render_template('reports/index.html',numreports=numreports)
+        lastreport=query_db("select max(timestamp) as lasttime from study where final is not null and ("+querystring+")",one=True)
+        avscore=query_db("select avg(diff_score_percent) as avscore from study where "+querystring,one=True)
+        return render_template('reports/index.html',numreports=numreports, lastreport=lastreport, avscore=avscore)
     else:
         return render_template('reports/index.html')
 
@@ -54,7 +56,8 @@ def user(username):
     for (i,userstring) in enumerate(userstrings):
         if i>0: querystring+=" or "
         querystring+=buildquery(userstring)
-    reports=query_db("select accession, timestamp, proceduredescription, attending, resident from study where "+querystring+" order by timestamp desc")
+    query="select accession, timestamp, proceduredescription, attending, resident, diff_score_percent from study where final is not null and ("+querystring+") order by timestamp desc"
+    reports=query_db(query)
     return render_template('reports/user.html',user=user,reports=reports)
 
 @reports.route('/accession/<accession>')    

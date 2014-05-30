@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-    <div class="jumbotron">
+    
     {% if current_user.is_authenticated() %}
+    <div class="jumbotron">
     <a class="btn btn-default pull-right" href="{{ url_for('auth.password') }}">Change Password</a>
-    <h1>Hello, {{ current_user.nickname or current_user.firstname }}!</h1>
+    <h2>Hello, {{ current_user.nickname or current_user.firstname }}!</h2>
     <p>Total reports: {{ numreports["count"] }}</p>
+    <p>Last edited report: {{ lastreport["lasttime"] }}</p>
+    <p>Average edit score: {{ '%.1f' % avscore["avscore"] }}%</p>
+    </div>
+    
     
     {% else %}
-    <h1>Radiology Report Review Server</h1>
-    <p>This is an experimental tool of the Radiology Department of the Keck School of Medicine of USC for reviewing attending edits of
-       radiology resident and fellow reports.</p>
-    <p>For questions and comments please contact <a href="mailto:phillip.cheng@med.usc.edu">Phillip Cheng, MD</a>.</p>
+    <div class="jumbotron">
+    <h1>ReportDiff Server</h1>
+    <p>An informatics project to allow review of attending edits of radiology resident and fellow reports.</p>
+    <p>For questions and comments please contact <a href="mailto:phillip.cheng@med.usc.edu">Phillip Cheng, MD MS</a>.</p>
     <p><a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg" role="button">Log in</a></p>
-    {% endif %}
     </div>
+    {% endif %}
 {% endblock %}
