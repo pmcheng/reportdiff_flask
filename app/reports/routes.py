@@ -37,7 +37,25 @@ def index():
         numreports=query_db("select count(*) as count from study where "+querystring,one=True)
         lastreport=query_db("select max(timestamp) as lasttime from study where final is not null and ("+querystring+")",one=True)
         avscore=query_db("select avg(diff_score_percent) as avscore from study where "+querystring,one=True)
-        return render_template('reports/index.html',numreports=numreports, lastreport=lastreport, avscore=avscore)
+        
+        bins=query_db("""select case when diff_score_percent<10 then 1
+                                   when diff_score_percent>=10 and diff_score_percent<25 then 2
+                                   when diff_score_percent>=25 and diff_score_percent<50 then 3
+                                   when diff_score_percent>=50 then 4
+                               end as bin,
+                               count(1) as c
+                               from study where """+querystring+""" group by bin order by bin""")
+        data=[item[1] for item in bins if item[0] is not None]
+        chartID="histogram"
+        chart= {"renderTo": chartID, "type":'column'}
+        series= [{"name":'Edit score',"data":data}]
+        xAxis= {"categories": ['<10%', '10-25%', '25-50%', '>50%']}
+        yAxis= {"title": {"text": 'Number of reports'}}
+        title= {"text": 'Histogram of edit score'}
+        
+        return render_template('reports/index.html',numreports=numreports, lastreport=lastreport, avscore=avscore,
+            chartID=chartID, chart= chart, series=series, title=title,
+                                 xAxis=xAxis, yAxis=yAxis)
     else:
         return render_template('reports/index.html')
 

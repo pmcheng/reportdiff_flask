@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 
+
+{% block scripts %}
+    {{super()}}
+    
+    {% if current_user.is_authenticated() %}
+    <script src="/static/js/highcharts.js"></script>
+    <script>
+        
+        var series = {{ series|safe }}
+        var title = {{ title|safe }}
+        var xAxis = {{ xAxis|safe }}
+        var yAxis = {{ yAxis|safe }}
+        var chart = {{ chart|safe }}
+        var chart_id = {{ chartID|safe }}
+        
+        $(function() {
+           $(chart_id).highcharts({
+                chart: chart,
+                title: title,
+                xAxis: xAxis,
+                yAxis: yAxis,
+                series: series,
+                credits: {enabled: false}
+            });
+           
+        });     
+    </script>
+    {% endif %}
+{% endblock %}
+
 {% block page_content %}
     
     {% if current_user.is_authenticated() %}
@@ -10,7 +40,7 @@
     <p>Last edited report: {{ lastreport["lasttime"] }}</p>
     <p>Average edit score: {{ '%.1f' % avscore["avscore"] }}%</p>
     </div>
-    
+    <div id={{chartID|safe}} class="chart" style="height: 300px; width: 100%"></div>
     
     {% else %}
     <div class="jumbotron">
@@ -20,4 +50,5 @@
     <p><a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg" role="button">Log in</a></p>
     </div>
     {% endif %}
+
 {% endblock %}
