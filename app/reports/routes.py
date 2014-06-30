@@ -5,6 +5,7 @@ from flask import render_template, flash, redirect, url_for
 from flask.ext.login import current_user
 from ..models import User
 from . import reports
+import diff_match_patch
  
 def get_db():   
     rdb = getattr(g, '_database', None)
@@ -81,4 +82,12 @@ def user(username):
 @reports.route('/accession/<accession>')    
 def accession(accession):
     report=query_db("select * from study where accession like '%s'" % accession, one=True)
-    return render_template('reports/accession.html',report=report)
+    
+    diff_match_patch.Diff_Timeout=0
+    dmp=diff_match_patch.diff_match_patch()
+    
+    d=dmp.diff_main(report["prelim"],report["final"])
+    dmp.diff_cleanupSemantic(d)
+    diff=dmp.diff_prettyHtml(d)
+
+    return render_template('reports/accession.html',report=report, diff=diff)
