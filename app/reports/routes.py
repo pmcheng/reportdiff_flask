@@ -35,9 +35,12 @@ def index():
         #    if i>0: querystring+=" or "
         #    querystring+=buildquery(userstring)
         querystring="attendingID={0} or residentID={0}".format(current_user.ps_id)
-        numreports=query_db("select count(*) as count from study where "+querystring,one=True)
-        lastreport=query_db("select max(timestamp) as lasttime from study where final is not null and ("+querystring+")",one=True)
-        avscore=query_db("select avg(diff_score_percent) as avscore from study where "+querystring,one=True)
+        numreports=query_db("select count(*) as count from study where "+querystring,one=True)[0]
+        lastreport=query_db("select max(timestamp) as lasttime from study where final is not null and ("+querystring+")",one=True)[0]
+        avscore=query_db("select avg(diff_score_percent) as avscore from study where "+querystring,one=True)[0]
+        print avscore
+        if avscore is None:
+            avscore=0
         
         bins=query_db("""select case when diff_score_percent<10 then 1
                                    when diff_score_percent>=10 and diff_score_percent<25 then 2

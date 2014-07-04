@@ -36,9 +36,9 @@
     <div class="jumbotron">
     <a class="btn btn-default pull-right" href="{{ url_for('auth.password') }}">Change Password</a>
     <h2>Hello, {{ current_user.nickname or current_user.firstname }}!</h2>
-    <p>Total reports: {{ numreports["count"] }}</p>
-    <p>Last edited report: {{ lastreport["lasttime"] }}</p>
-    <p>Average edit score: {{ '%.1f' % avscore["avscore"] }}%</p>
+    <p>Total reports: {{ numreports }}</p>
+    <p>Last edited report: {{ lastreport }}</p>
+    <p>Average edit score: {{ '%.1f' % avscore }}%</p>
     </div>
     <div id={{chartID|safe}} class="chart" style="height: 300px; width: 100%"></div>
     
