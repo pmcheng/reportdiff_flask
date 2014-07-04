@@ -15,7 +15,8 @@ class User(UserMixin, db.Model):
     nickname = db.Column(db.String(64))
     lastlogin = db.Column(db.String(64))
     numlogins = db.Column(db.Integer)
-    userstrings=db.Column(db.String(256))
+    ps_id = db.Column(db.Integer)
+    #userstrings=db.Column(db.String(256))
 
     #@property
     #def password(self):

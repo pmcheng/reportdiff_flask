@@ -29,12 +29,12 @@ def close_connection(exception):
 @reports.route('/')
 def index():
     if current_user.is_authenticated():
-        userstrings=current_user.userstrings.split('|')
-        querystring=""
-        for (i,userstring) in enumerate(userstrings):
-            if i>0: querystring+=" or "
-            querystring+=buildquery(userstring)
-        
+        #userstrings=current_user.userstrings.split('|')
+        #querystring=""
+        #for (i,userstring) in enumerate(userstrings):
+        #    if i>0: querystring+=" or "
+        #    querystring+=buildquery(userstring)
+        querystring="attendingID={0} or residentID={0}".format(current_user.ps_id)
         numreports=query_db("select count(*) as count from study where "+querystring,one=True)
         lastreport=query_db("select max(timestamp) as lasttime from study where final is not null and ("+querystring+")",one=True)
         avscore=query_db("select avg(diff_score_percent) as avscore from study where "+querystring,one=True)
@@ -49,7 +49,7 @@ def index():
         data=[item[1] for item in bins if item[0] is not None]
         chartID="histogram"
         chart= {"renderTo": chartID, "type":'column'}
-        series= [{"name":'Edit score',"data":data}]
+        series= [{"name":'Studies',"data":data}]
         xAxis= {"categories": ['<10%', '10-25%', '25-50%', '>50%']}
         yAxis= {"title": {"text": 'Number of reports'}}
         title= {"text": 'Histogram of edit score'}
@@ -70,12 +70,13 @@ def user(username):
         flash('Cannot access requested page.')
         return redirect(url_for('reports.index'))
         
-    userstrings=user.userstrings.split('|')
-    querystring=""
-    for (i,userstring) in enumerate(userstrings):
-        if i>0: querystring+=" or "
-        querystring+=buildquery(userstring)
-    query="select accession, timestamp, proceduredescription, attending, resident, diff_score_percent from study where final is not null and ("+querystring+") order by timestamp desc"
+    #userstrings=user.userstrings.split('|')
+    #querystring=""
+    #for (i,userstring) in enumerate(userstrings):
+    #    if i>0: querystring+=" or "
+    #    querystring+=buildquery(userstring)
+    querystring="attendingID={0} or residentID={0}".format(current_user.ps_id)
+    query="select accession, timestamp, proceduredescription, attending, resident, diff_score_percent from study where diff_score is not null and ("+querystring+") order by timestamp desc"
     reports=query_db(query)
     return render_template('reports/user.html',user=user,reports=reports)
 
