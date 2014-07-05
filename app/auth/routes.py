@@ -5,6 +5,7 @@ from .. import db
 from . import auth
 from .forms import LoginForm, PasswordForm
 import datetime
+from sqlalchemy import func
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -13,7 +14,8 @@ def login():
         return redirect(url_for('.login', _external=True, _scheme='https'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter(func.lower(User.username)==func.lower(form.username.data)).first()
+        #user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.verify_password(form.password.data):
             flash('Invalid username or password.')
             return redirect(url_for('.login'))
