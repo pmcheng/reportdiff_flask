@@ -13,8 +13,8 @@ class User(UserMixin, db.Model):
     firstname = db.Column(db.String(64))
     lastname = db.Column(db.String(64))
     nickname = db.Column(db.String(64))
-    lastlogin = db.Column(db.String(64))
-    numlogins = db.Column(db.Integer)
+    #lastlogin = db.Column(db.String(64))
+    #numlogins = db.Column(db.Integer)
     ps_id = db.Column(db.Integer)
     #userstrings=db.Column(db.String(256))
 
@@ -29,7 +29,13 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         #return check_password_hash(self.password_hash, password)    
         return (self.password==password)
-      
+
+class Login(db.Model):
+    __tablename__ = 'logins'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id=db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False)
+    timestamp=db.Column(db.String(64))    
+        
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))

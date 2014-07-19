@@ -1,6 +1,6 @@
 from flask import render_template, current_app, request, redirect, url_for, flash
 from flask.ext.login import login_user, logout_user, login_required, current_user
-from ..models import User
+from ..models import User, Login
 from .. import db
 from . import auth
 from .forms import LoginForm, PasswordForm
@@ -21,9 +21,12 @@ def login():
             return redirect(url_for('.login'))
         login_user(user, form.remember_me.data)
         
-        current_user.numlogins+=1
-        current_user.lastlogin=datetime.datetime.now()
-        db.session.add(current_user._get_current_object())
+        login = Login(user_id=user.id,timestamp=datetime.datetime.now())
+        db.session.add(login)
+        
+        #current_user.numlogins+=1
+        #current_user.lastlogin=datetime.datetime.now()
+        #db.session.add(current_user._get_current_object())
         db.session.commit()
         
         return redirect(request.args.get('next') or url_for('reports.index'))
