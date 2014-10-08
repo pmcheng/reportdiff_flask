@@ -3,8 +3,10 @@ from flask import g, current_app
 
 from flask import render_template, flash, redirect, url_for
 from flask.ext.login import current_user
-from ..models import User
+from ..models import User, ReportView
+from .. import db
 from . import reports
+import datetime
 import diff_match_patch
  
 def get_db():   
@@ -85,7 +87,22 @@ def user(username):
 
 @reports.route('/accession/<accession>')    
 def accession(accession):
+    if not current_user.is_authenticated():
+        flash('Cannot access requested page.')
+        return redirect(url_for('reports.index'))
+    
     report=query_db("select * from study where accession like '%s'" % accession, one=True)
+    
+    if report is None:
+        return redirect('/user/'+current_user.username)
+    if report["attendingID"]!=current_user.ps_id and report["residentID"]!=current_user.ps_id:
+        return redirect('/user/'+current_user.username)
+    if report["prelim"] is None or report["final"] is None:
+        return redirect('/user/'+current_user.username)
+        
+    report_view = ReportView(user_id=current_user.id,accession=accession,timestamp=datetime.datetime.now())
+    db.session.add(report_view)
+    db.session.commit()
     
     diff_match_patch.Diff_Timeout=0
     dmp=diff_match_patch.diff_match_patch()

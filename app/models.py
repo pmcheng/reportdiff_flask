@@ -35,7 +35,15 @@ class Login(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id=db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False)
     timestamp=db.Column(db.String(64))    
-        
+
+class ReportView(db.Model):
+    __tablename__ = 'report_views'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id=db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False)
+    accession=db.Column(db.String(64))
+    timestamp=db.Column(db.String(64))    
+
+    
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
