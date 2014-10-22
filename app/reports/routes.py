@@ -104,8 +104,8 @@ def accession(accession):
     db.session.add(report_view)
     db.session.commit()
     
-    diff_match_patch.Diff_Timeout=0
     dmp=diff_match_patch.diff_match_patch()
+    dmp.Diff_Timeout=0
     
     d=dmp.diff_main(report["prelim"],report["final"])
     dmp.diff_cleanupSemantic(d)
