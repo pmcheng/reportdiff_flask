@@ -12,12 +12,6 @@ manager = Manager(app)
 @manager.command
 def adduser(username, password, firstname="", lastname="", nickname="", admin=False):
     """Register a new user."""
-    #from getpass import getpass
-    #password = getpass()
-    #password2 = getpass(prompt='Confirm: ')
-    #if password != password2:
-    #    import sys
-    #    sys.exit('Error: passwords do not match.')
     db.create_all()
     user = User(username=username, password=password, firstname=lastname, lastname=lastname, nickname=nickname,
                 is_admin=admin)

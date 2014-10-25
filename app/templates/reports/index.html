@@ -8,23 +8,10 @@
     <script src="/static/js/highcharts.js"></script>
     <script>
         
-        var series = {{ series|safe }}
-        var title = {{ title|safe }}
-        var xAxis = {{ xAxis|safe }}
-        var yAxis = {{ yAxis|safe }}
-        var chart = {{ chart|safe }}
-        var chart_id = {{ chartID|safe }}
+        var histogram_json={{histogram_json|tojson|safe}}
         
         $(function() {
-           $(chart_id).highcharts({
-                chart: chart,
-                title: title,
-                xAxis: xAxis,
-                yAxis: yAxis,
-                series: series,
-                credits: {enabled: false}
-            });
-           
+           $('#histogram').highcharts(histogram_json);           
         });     
     </script>
     {% endif %}
@@ -40,7 +27,7 @@
     <p>Last edited report: {{ lastreport }}</p>
     <p>Average edit score: {{ '%.1f' % avscore }}%</p>
     </div>
-    <div id={{chartID|safe}} class="chart" style="height: 300px; width: 100%"></div>
+    <div id="histogram" class="chart" style="height: 300px; width: 100%"></div>
     
     {% else %}
     <div class="jumbotron">

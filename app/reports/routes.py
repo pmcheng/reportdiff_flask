@@ -40,28 +40,42 @@ def index():
         numreports=query_db("select count(*) as count from study where "+querystring,one=True)[0]
         lastreport=query_db("select max(timestamp) as lasttime from study where final is not null and ("+querystring+")",one=True)[0]
         avscore=query_db("select avg(diff_score_percent) as avscore from study where "+querystring,one=True)[0]
-        print avscore
+        
         if avscore is None:
             avscore=0
         
-        bins=query_db("""select case when diff_score_percent<10 then 1
-                                   when diff_score_percent>=10 and diff_score_percent<25 then 2
-                                   when diff_score_percent>=25 and diff_score_percent<50 then 3
-                                   when diff_score_percent>=50 then 4
-                               end as bin,
-                               count(1) as c
-                               from study where """+querystring+""" group by bin order by bin""")
-        data=[item[1] for item in bins if item[0] is not None]
-        chartID="histogram"
-        chart= {"renderTo": chartID, "type":'column'}
-        series= [{"name":'Studies',"data":data}]
-        xAxis= {"categories": ['<10%', '10-25%', '25-50%', '>50%']}
-        yAxis= {"title": {"text": 'Number of reports'}}
-        title= {"text": 'Histogram of edit score'}
+        histoquery="select case "
+        
+        bars=11
+        categories=[]
+        data=[0]*bars
+        barsize=100/(bars-1)
+        for i in range(bars-1):
+            limit_low=i*barsize
+            limit_high=limit_low+barsize
+            histoquery+="when diff_score_percent>={0} and diff_score_percent<{1} then {2} ".format(limit_low,limit_high,i)
+            categories.append("{0}-{1}%".format(limit_low,limit_high))
+        histoquery+="when diff_score_percent>=100 then {0} ".format(bars-1)
+        categories.append(">100%")
+        histoquery+="end as bin, count(1) as c from study where {0} group by bin order by bin".format(querystring)
+        bins=query_db(histoquery)
+        
+        for item in bins:
+            if item[0] is not None:
+                data[item[0]]=item[1]
+                
+        histogram_json={
+            'chart': {'type':'column'},
+            'title': {'text': 'Diff Percent Distribution'},
+            'series': [{'name':'Studies','data':data}],
+            'xAxis': {'categories': categories},
+            'yAxis': {'title': {'text': 'Number of reports'}},
+            'credits': {'enabled':False}
+        }
+        
         
         return render_template('reports/index.html',numreports=numreports, lastreport=lastreport, avscore=avscore,
-            chartID=chartID, chart= chart, series=series, title=title,
-                                 xAxis=xAxis, yAxis=yAxis)
+            histogram_json=histogram_json)
     else:
         return render_template('reports/index.html')
 
