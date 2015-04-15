@@ -1,3 +1,4 @@
+/* Based on "Wrapping Text Inside Pre Tags", https://longren.io/wrapping-text-inside-pre-tags */
 pre {
 overflow-x: auto; /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
 white-space: pre-wrap; /* css-3 */
@@ -6,5 +7,5 @@ white-space: -pre-wrap; /* Opera 4-6 */
 white-space: -o-pre-wrap; /* Opera 7 */
 /* width: 99%; */
 word-wrap: break-word; /* Internet Explorer 5.5+ */
-word-break: normal;
+word-break: normal; /* PC - needed for Bootstrap */
 }
