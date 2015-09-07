@@ -8,15 +8,13 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64),
                          nullable=False, unique=True, index=True)
-    role = db.Column(db.Boolean)
+    role = db.Column(db.Integer)
     password = db.Column(db.String(128))
     firstname = db.Column(db.String(64))
     lastname = db.Column(db.String(64))
     nickname = db.Column(db.String(64))
-    #lastlogin = db.Column(db.String(64))
-    #numlogins = db.Column(db.Integer)
     ps_id = db.Column(db.Integer)
-    #userstrings=db.Column(db.String(256))
+    grad_date = db.Column(db.String(64))
 
     #@property
     #def password(self):

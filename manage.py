@@ -10,11 +10,11 @@ manager = Manager(app)
 
 
 @manager.command
-def adduser(username, password, firstname="", lastname="", nickname="", admin=False):
+def adduser(username, password, firstname="", lastname="", nickname="", role=0):
     """Register a new user."""
     db.create_all()
     user = User(username=username, password=password, firstname=lastname, lastname=lastname, nickname=nickname,
-                is_admin=admin)
+                role=role)
     db.session.add(user)
     db.session.commit()
     print('User {0} was registered successfully.'.format(username))
