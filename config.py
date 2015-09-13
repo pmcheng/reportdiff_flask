@@ -4,8 +4,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    REPORT_DATABASE = os.path.join(basedir,'..','powerscribe','reportdiff_ps.db')
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,'..','powerscribe','users.db')
+    REPORT_DATABASE = os.path.join(basedir,'..','core','powerscribe','reportdiff_ps.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,'..','core','powerscribe','users.db')
     
 class DevelopmentConfig(Config):
     DEBUG = True
