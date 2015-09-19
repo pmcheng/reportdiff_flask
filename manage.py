@@ -11,7 +11,8 @@ manager = Manager(app)
 
 @manager.command
 def adduser(username, password, firstname="", lastname="", nickname="", role=0):
-    """Register a new user."""
+    """Register a new user.  I use this mainly for development testing, and use users_db_populate.py for 
+       registering users directly from the PS360 database."""
     db.create_all()
     user = User(username=username, password=password, firstname=lastname, lastname=lastname, nickname=nickname,
                 role=role)

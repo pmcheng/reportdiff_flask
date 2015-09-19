@@ -31,11 +31,6 @@ def close_connection(exception):
 @reports.route('/')
 def index():
     if current_user.is_authenticated():
-        #userstrings=current_user.userstrings.split('|')
-        #querystring=""
-        #for (i,userstring) in enumerate(userstrings):
-        #    if i>0: querystring+=" or "
-        #    querystring+=buildquery(userstring)
         querystring="attendingID={0} or residentID={0}".format(current_user.ps_id)
         numreports=query_db("select count(*) as count from study where "+querystring,one=True)[0]
         lastreport=query_db("select max(timestamp) as lasttime from study where final is not null and ("+querystring+")",one=True)[0]
@@ -89,11 +84,6 @@ def user(username):
         flash('Cannot access requested page.')
         return redirect(url_for('reports.index'))
         
-    #userstrings=user.userstrings.split('|')
-    #querystring=""
-    #for (i,userstring) in enumerate(userstrings):
-    #    if i>0: querystring+=" or "
-    #    querystring+=buildquery(userstring)
     querystring="attendingID={0} or residentID={0}".format(current_user.ps_id)
     query="select accession, timestamp, proceduredescription, attending, resident, diff_score_percent from study where diff_score is not null and ("+querystring+") order by timestamp desc"
     reports=query_db(query)
@@ -109,11 +99,15 @@ def accession(accession):
     
     if report is None:
         return redirect('/user/'+current_user.username)
-    if report["attendingID"]!=current_user.ps_id and report["residentID"]!=current_user.ps_id:
-        return redirect('/user/'+current_user.username)
+
     if report["prelim"] is None or report["final"] is None:
         return redirect('/user/'+current_user.username)
-        
+       
+    # Need to be an author of the report to view it
+    if report["attendingID"]!=current_user.ps_id and report["residentID"]!=current_user.ps_id:
+        return redirect('/user/'+current_user.username)
+
+    # Add view to the repot viewing log   
     report_view = ReportView(user_id=current_user.id,accession=accession,timestamp=datetime.datetime.now())
     db.session.add(report_view)
     db.session.commit()
