@@ -16,14 +16,16 @@ class User(UserMixin, db.Model):
     ps_id = db.Column(db.Integer)
     grad_date = db.Column(db.String(64))
 
+    # For greater security we should be generating and storing a password hash
+    
     #@property
     #def password(self):
     #    raise AttributeError('password is not a readable attribute')
 
     #@password.setter
     #def password(self, password):
-    #    #self.password_hash = generate_password_hash(password)
-    #    self.password = password
+    #    self.password_hash = generate_password_hash(password)
+    
     def verify_password(self, password):
         #return check_password_hash(self.password_hash, password)    
         return (self.password==password)
