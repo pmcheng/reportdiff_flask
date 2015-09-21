@@ -26,3 +26,5 @@ conditions of the following licenses:
 Bootstrap: The MIT License (MIT)              https://github.com/twbs/bootstrap/blob/master/LICENSE
 Google diff-match-patch: Apache License 2.0   https://code.google.com/p/google-diff-match-patch/
 Flask: BSD License                            http://flask.pocoo.org/docs/0.10/license/
+Highcharts JS: Creative Commons Attribution-NonCommercial License (non-commercial use only)            
+                                              http://www.highcharts.com/products/highcharts
