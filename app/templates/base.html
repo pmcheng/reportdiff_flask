@@ -33,6 +33,9 @@
             <ul class="nav navbar-nav">
                 {% if current_user.is_authenticated() %}
                 <li><a href="{{ url_for('reports.user', username=current_user.username) }}">Report list</a></li>
+                {% if current_user.grad_date %}
+                <li><a href="{{ url_for('reports.comparison', username=current_user.username) }}">Comparison</a></li>
+                {% endif %}
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">

@@ -66,6 +66,7 @@ def index():
             'xAxis': {'categories': categories},
             'yAxis': {'title': {'text': 'Number of reports'}},
             'credits': {'enabled':False}
+
         }
         
         
@@ -76,6 +77,97 @@ def index():
 
 def buildquery(userstring):
     return "attending like '%"+userstring+"%' or resident like '%"+userstring+"%'"
+
+@reports.route('/user/<username>/comparison')
+def comparison(username):
+    user = User.query.filter_by(username=username).first()
+    if user!=current_user: 
+        flash('Cannot access requested page.')
+        return redirect(url_for('reports.index'))
+    attendingquery="select attendingID, avg(diff_score_percent) from study where attendingID is not NULL group by attendingID"
+    attendingresult=query_db(attendingquery)
+    attendingscores={} # (attendingID) => average diff_score_percent
+    for item in attendingresult:
+        attendingscores[int(item[0])]=float(item[1])
+    attendingsorted=sorted(attendingscores.items(),key=lambda x:x[1],reverse=True)
+    
+    studyquery="select residentID, attendingID, sum(diff_score_percent), count(*) as count from study where residentID is not NULL and attendingID is not NULL group by residentID, attendingID"
+    studyresult=query_db(studyquery)
+    studyscores={}  # (residentID, attendingID) => total diff_score_percent
+    studycounts={}  # (residentID, attendingID) => study count
+    for item in studyresult:
+        studyscores[(int(item[0]),int(item[1]))]=float(item[2])
+        studycounts[(int(item[0]),int(item[1]))]=float(item[3])
+    
+    for key in studyscores:
+        studyscores[key]-=attendingscores[key[1]]*studycounts[key]  # adjust scores for mean attending edit score
+    
+    residentscores={}
+    by_attending={}
+    for key in studyscores:
+        test_user=User.query.filter_by(ps_id=key[0]).first()
+        if test_user.grad_date!=user.grad_date: continue
+        if str(key[0]) in residentscores:
+            residentscores[str(key[0])]+=studyscores[key]
+        else:
+            residentscores[str(key[0])]=studyscores[key]   
+            
+        if test_user==user:
+            by_attending[str(key[1])]=studyscores[key]/studycounts[key]
+    
+    data=sorted(residentscores.items(),key=lambda x:x[1],reverse=True)
+    
+    
+    
+    resident_names=[]
+    for item in data:
+        test_user=User.query.filter_by(ps_id=item[0]).first()
+        if test_user is not None and test_user==user:
+            if test_user.nickname.strip()!="":
+                resident_names.append(test_user.nickname+" "+test_user.lastname)
+            else:
+                resident_names.append(test_user.firstname+" "+test_user.lastname)
+        else:
+            resident_names.append('')
+            
+    by_attending_data=sorted(by_attending.items(),key=lambda x:x[1],reverse=True)
+    attending_names=[]
+    for item in by_attending_data:
+        test_user=User.query.filter_by(ps_id=item[0]).first()
+        if test_user is not None:
+            if test_user.nickname.strip()!="":
+                attending_names.append(test_user.nickname+" "+test_user.lastname)
+            else:
+                attending_names.append(test_user.firstname+" "+test_user.lastname)
+        else:
+            resident_names.append('')
+    
+    
+    resident_chart_json={
+            'chart': {'type':'bar'},
+            'title': {'text': 'Within class summed adjusted edit scores (lower is better)'},
+            'xAxis': {'title': {'text': 'Trainees'},'categories': resident_names},
+            'yAxis': {'title': {'text': 'Summed adjusted edit score'}},
+            'series': [{'name':'Edit scores','data':data}],
+            'tooltip': {'enabled':False},
+            'legend' : {'enabled':False},
+            'credits': {'enabled':False}
+        }
+
+    attending_chart_json={
+            'chart': {'type':'bar'},
+            'title': {'text': 'Average adjusted edit score by attending (lower is better)'},
+            'xAxis': {'title': {'text': 'Attendings'},'categories': attending_names},
+            'yAxis': {'title': {'text': 'Average adjusted edit score'}},
+            'series': [{'name':'Edit scores','data':by_attending_data}],
+            'tooltip': {'enabled':False},
+            'legend' : {'enabled':False},
+            'credits': {'enabled':False}
+        }
+        
+    
+    return render_template('reports/comparison.html',resident_chart_json=resident_chart_json,resident_table_height=len(data),
+                            attending_chart_json=attending_chart_json,attending_table_height=len(by_attending_data))
     
 @reports.route('/user/<username>')
 def user(username):

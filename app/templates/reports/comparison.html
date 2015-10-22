@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+{% block scripts %}
+    {{super()}}
+    
+    {% if current_user.is_authenticated() %}
+    <script src="/static/js/highcharts.js"></script>
+    <script>
+        
+        var resident_chart_json={{resident_chart_json|tojson|safe}}
+        var attending_chart_json={{attending_chart_json|tojson|safe}}
+        
+        $(function() {
+           $('#resident_chart').highcharts(resident_chart_json);           
+           $('#attending_chart').highcharts(attending_chart_json);           
+        });     
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    
+    {% if current_user.is_authenticated() %}
+
+    <div id="resident_chart" style="height: {{ 100+resident_table_height*40 }}px; width: 100%"></div>
+    <div id="attending_chart" style="height: {{ 100+attending_table_height*40 }}px; width: 100%"></div>
+
+    {% endif %}
+
+{% endblock %}
