@@ -43,6 +43,26 @@ class ReportView(db.Model):
     accession=db.Column(db.String(64))
     timestamp=db.Column(db.String(64))    
 
+class Report(db.Model):
+    __bind_key__ = 'reports'
+    __tablename__ = 'study'
+    site = db.Column(db.String(128))
+    accession = db.Column(db.String(64), primary_key=True)
+    timestamp = db.Column(db.String(64))
+    proceduredescription = db.Column(db.String(128))
+    procedurecode = db.Column(db.String(64))
+    modality = db.Column(db.String(64))
+    resident = db.Column(db.String(128))
+    residentID = db.Column(db.String(64))
+    attending = db.Column(db.String(128))
+    attendingID = db.Column(db.String(64))
+    prelim = db.Column(db.String(65536))
+    prelim_timestamp = db.Column(db.String(64))
+    final = db.Column(db.String(65536))
+    final_timestamp = db.Column(db.String(64))
+    diff_score = db.Column(db.Integer)
+    diff_score_percent = db.Column(db.Float)
+    
     
 @login_manager.user_loader
 def load_user(user_id):

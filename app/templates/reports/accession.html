@@ -16,13 +16,13 @@
     </tr>
     </thead>
     <tr>
-    <td>{{ report["timestamp"] }}</td>
-    <td>{{ report["accession"] }}</td>
-    <td>{{ report["proceduredescription"] }}</td>
-    <td>{{ report["resident"] }}</td>
-    <td>{{ report["attending"] }}</td>
-    <td>{{ report["diff_score"] }}</td>
-    <td>{{ '%.2f' % report["diff_score_percent"] }}</td>
+    <td>{{ report.timestamp }}</td>
+    <td>{{ report.accession }}</td>
+    <td>{{ report.proceduredescription }}</td>
+    <td>{{ report.resident }}</td>
+    <td>{{ report.attending }}</td>
+    <td>{{ report.diff_score }}</td>
+    <td>{{ '%.2f' % report.diff_score_percent }}</td>
     </tr>
 </table>
 
@@ -37,12 +37,12 @@
  <div class="tab-content">
    <div id="prelim" class="tab-pane">
     <pre>
-{{ report["prelim"] }}
+{{ report.prelim }}
      </pre>
    </div>
    <div id="final" class="tab-pane">
      <pre>
-{{ report["final"] }}
+{{ report.final }}
      </pre>
    </div>
    <div id="diff" class="tab-pane active">

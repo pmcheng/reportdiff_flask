@@ -17,14 +17,14 @@
     </thead>
     {% for row in reports %}
     <tr>
-    {% set rowlink=url_for('reports.accession',accession=row["accession"]) %}
-    <td><a href="{{ rowlink }}">{{ row["timestamp"] }}</a></td>
-    <td><a href="{{ rowlink }}">{{ row["accession"] }}</a></td>
-    <td><a href="{{ rowlink }}">{{ row["proceduredescription"] }}</a></td>
+    {% set rowlink=url_for('reports.accession',accession=row.accession) %}
+    <td><a href="{{ rowlink }}">{{ row.timestamp }}</a></td>
+    <td><a href="{{ rowlink }}">{{ row.accession }}</a></td>
+    <td><a href="{{ rowlink }}">{{ row.proceduredescription }}</a></td>
     
-    <td>{{ row["resident"] }}</td>
-    <td>{{ row["attending"] }}</td>
-    <td>{{ '%.1f' % row["diff_score_percent"] }}</td>
+    <td>{{ row.resident }}</td>
+    <td>{{ row.attending }}</td>
+    <td>{{ '%.1f' % row.diff_score_percent }}</td>
     </tr>
     {% endfor %}
 </table>
