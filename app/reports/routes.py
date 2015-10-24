@@ -94,27 +94,27 @@ def comparison(username):
     data=sorted(residentscores.items(),key=lambda x:x[1],reverse=True)
     
     resident_names=[]
-    for item in data:
-        test_user=User.query.filter_by(ps_id=item[0]).first()
-        if test_user is not None and test_user==user:
-            if test_user.nickname.strip()!="":
-                resident_names.append(test_user.nickname+" "+test_user.lastname)
+    for n,item in enumerate(data):
+        if item[0]==user.ps_id:
+            
+            if user.nickname.strip()!="":
+                username=user.nickname+" "+user.lastname
             else:
-                resident_names.append(test_user.firstname+" "+test_user.lastname)
+                username=user.firstname+" "+user.lastname
+            resident_names.append(username)
+            data[n]={'name':username,'y':item[1],'color':'#ff0000'}
         else:
             resident_names.append('')
+            data[n]=item[1]
             
     by_attending_data=sorted(by_attending.items(),key=lambda x:x[1],reverse=True)
     attending_names=[]
     for item in by_attending_data:
         test_user=User.query.filter_by(ps_id=item[0]).first()
-        if test_user is not None:
-            if test_user.nickname.strip()!="":
-                attending_names.append(test_user.nickname+" "+test_user.lastname)
-            else:
-                attending_names.append(test_user.firstname+" "+test_user.lastname)
+        if test_user.nickname.strip()!="":
+            attending_names.append(test_user.nickname+" "+test_user.lastname)
         else:
-            resident_names.append('')
+            attending_names.append(test_user.firstname+" "+test_user.lastname)
     
     
     resident_chart_json={
