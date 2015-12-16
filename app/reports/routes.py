@@ -82,7 +82,7 @@ def comparison(username):
     by_attending={}
     for key in studyscores:
         test_user=User.query.filter_by(ps_id=key[0]).first()
-        if test_user.grad_date!=user.grad_date: continue
+        if test_user is None or test_user.grad_date!=user.grad_date: continue
         if str(key[0]) in residentscores:
             residentscores[str(key[0])]+=studyscores[key]
         else:
