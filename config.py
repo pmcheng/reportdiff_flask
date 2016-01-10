@@ -9,6 +9,7 @@ class Config:
     SQLALCHEMY_BINDS = {
       'reports': 'sqlite:///' + os.path.join(basedir,'..','core','powerscribe','reportdiff_ps.db')
     }
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     
 class DevelopmentConfig(Config):
     DEBUG = True

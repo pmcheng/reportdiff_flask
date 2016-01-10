@@ -5,9 +5,14 @@ from flask.ext.login import current_user
 from ..models import User, ReportView, Report
 from .. import db
 from . import reports
-import datetime
-import diff_match_patch
+import sys,datetime
 from sqlalchemy import or_, and_, func
+
+PY3=sys.version_info > (3,) 
+if PY3: 
+    from . import diff_match_patch3 as diff_match_patch
+else:
+    from . import diff_match_patch
  
 @reports.route('/')
 def index():
