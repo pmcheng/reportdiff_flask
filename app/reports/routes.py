@@ -1,7 +1,7 @@
 import sqlite3,os
 
 from flask import render_template, flash, redirect, url_for
-from flask.ext.login import current_user
+from flask_login import current_user
 from ..models import User, ReportView, Report
 from .. import db
 from . import reports
@@ -16,7 +16,7 @@ else:
  
 @reports.route('/')
 def index():
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         numreports=db.session.query(func.count(Report.accession)).filter(or_(Report.attendingID==current_user.ps_id, Report.residentID==current_user.ps_id)).first()[0]
         
         lastreport=db.session.query(func.max(Report.timestamp)).filter(and_(Report.final!=None,or_(Report.attendingID==current_user.ps_id, Report.residentID==current_user.ps_id))).first()[0]
@@ -160,7 +160,7 @@ def user(username):
 
 @reports.route('/accession/<accession>')    
 def accession(accession):
-    if not current_user.is_authenticated():
+    if not current_user.is_authenticated:
         flash('Cannot access requested page.')
         return redirect(url_for('reports.index'))
     

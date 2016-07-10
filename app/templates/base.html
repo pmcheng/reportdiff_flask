@@ -31,7 +31,7 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                {% if current_user.is_authenticated() %}
+                {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('reports.user', username=current_user.username) }}">Report list</a></li>
                 {% if current_user.grad_date %}
                 <li><a href="{{ url_for('reports.comparison', username=current_user.username) }}">Comparison</a></li>
@@ -39,7 +39,7 @@
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {% if current_user.is_authenticated() %}
+                {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                 {% endif %}            
             </ul>            

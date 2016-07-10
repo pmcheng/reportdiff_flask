@@ -4,7 +4,7 @@
 {% block scripts %}
     {{super()}}
     
-    {% if current_user.is_authenticated() %}
+    {% if current_user.is_authenticated %}
     <script src="/static/js/highcharts.js"></script>
     <script>
         
@@ -19,7 +19,7 @@
 
 {% block page_content %}
     
-    {% if current_user.is_authenticated() %}
+    {% if current_user.is_authenticated %}
     <div class="jumbotron">
     <a class="btn btn-default pull-right" href="{{ url_for('auth.password') }}">Change Password</a>
     <h2>Hello, {{ current_user.nickname or current_user.firstname }}!</h2>
