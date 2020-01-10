@@ -93,7 +93,7 @@ def comparison(username):
         else:
             residentscores[str(key[0])]=studyscores[key]   
             
-        if test_user==user:
+        if test_user.ps_id==user.ps_id:
             by_attending[str(key[1])]=studyscores[key]/studycounts[key]
     
     data=sorted(residentscores.items(),key=lambda x:x[1],reverse=True)
