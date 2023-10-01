@@ -2,5 +2,7 @@ Flask
 Flask-Bootstrap
 Flask-Login
 Flask-SQLAlchemy
-Flask-Script
+Flask-Script==2.0.5
 Flask-WTF
+Werkzeug==2.3
+watchdog==2.3.0
