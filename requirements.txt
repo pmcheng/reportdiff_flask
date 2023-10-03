@@ -2,7 +2,13 @@ Flask
 Flask-Bootstrap
 Flask-Login
 Flask-SQLAlchemy
-Flask-Script==2.0.5
 Flask-WTF
-Werkzeug==2.3
-watchdog==2.3.0
+
+# Needed since release of Werkzeug 3.0 on 2023-09-30 breaks flask-login 0.6.2 with url_decode error
+Werkzeug<3.0
+
+# Currently using stat reloader, but if prefer watchdog reloader...
+# Werkzeug >2.3 needs at least watchdog 2.3, otherwise "EVENT_TYPE_OPENED" not available
+# watchdog>=3.0  
+
+# Flask-Script is deprecated

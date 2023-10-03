@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# This is deprecated due to flask_script no longer being maintained.  Use serve.py
+
 import os
 from app import create_app
 from flask_script import Manager
